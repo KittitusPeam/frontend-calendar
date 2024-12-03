@@ -1,0 +1,261 @@
+@import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap");
+
+/* variables */
+:root {
+    --white: #fff;
+    --main: #eaedf0;
+    --accent: #f76c92;
+    --accent-2: #ffe4e9;
+    --disabled: #cccccc;
+    /* สีสำหรับวันที่ที่ไม่สามารถเลือกได้ */
+    --font-size-header: 1.5rem;
+    --font-size-day: 1.2rem;
+    --day-size: 4rem;
+    --week-day-size: 1.5rem;
+    --container-padding: 2em;
+    --container-width: 500px;
+    --nav-size: 2rem;
+    --today-button-bg: #f76c92;
+    --today-button-color: #fff;
+    --today-button-hover-bg: #d65a7f;
+    --add-button-bg: #4caf50;
+    /* สีพื้นหลังสำหรับปุ่มเพิ่ม */
+    --add-button-color: #fff;
+    /* สีตัวอักษรสำหรับปุ่มเพิ่ม */
+    --add-button-hover-bg: #45a049;
+    /* สีพื้นหลังเมื่อ hover สำหรับปุ่มเพิ่ม */
+}
+
+/* styles */
+body {
+    background-color: var(--main);
+    display: flex;
+    align-items: center;
+    font-family: "Sarabun", sans-serif !important;
+    justify-content: center;
+    height: auto;
+    margin: 0;
+}
+
+.container {
+    display: inline-block;
+    background-color: var(--white);
+    border-radius: 35px;
+    padding: var(--container-padding);
+    margin-top: 2em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: var(--container-width);
+}
+
+/* ปุ่มวันนี้ */
+.today-container {
+    display: flex;
+    justify-content: flex-end;
+    /* margin-bottom: 10px; */
+    gap: 1%;
+}
+
+.today-button {
+    padding: 8px 16px;
+    background-color: var(--today-button-bg);
+    color: var(--today-button-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.today-button:hover {
+    background-color: var(--today-button-hover-bg);
+}
+
+/* ปุ่มเพิ่มกิจกรรม */
+.add-button {
+    padding: 8px 16px;
+    background-color: var(--add-button-bg);
+    color: var(--add-button-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.add-button:hover {
+    background-color: var(--add-button-hover-bg);
+}
+
+header {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    gap: 1%;
+}
+
+.header-display {
+    display: flex;
+    align-items: center;
+}
+
+.header-display p {
+    color: var(--accent);
+    margin: 5px;
+    font-size: var(--font-size-header);
+    word-spacing: 0.5rem;
+}
+
+pre {
+    padding: 10px;
+    margin: 0;
+    cursor: pointer;
+    font-size: var(--nav-size);
+    color: var(--accent);
+    user-select: none;
+}
+
+.days,
+.week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin: auto;
+    padding: 0 20px;
+    justify-content: space-between;
+}
+
+.week div,
+.days div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: var(--day-size);
+    width: var(--day-size);
+    border-radius: 100%;
+    transition: background 0.3s, color 0.3s;
+    font-size: var(--font-size-day);
+}
+
+.week div {
+    font-size: var(--week-day-size);
+    opacity: 0.7;
+}
+
+.days div:hover {
+    background-color: var(--accent-2);
+    color: var(--accent);
+    cursor: pointer;
+}
+
+/* สไตล์สำหรับวันที่ไม่สามารถเลือกได้ */
+.disabled {
+    background-color: var(--disabled);
+    color: #666666;
+    cursor: not-allowed;
+}
+
+.disabled:hover {
+    background-color: var(--disabled);
+    color: #666666;
+}
+
+/* สไตล์สำหรับวันที่ปัจจุบัน */
+.current-date {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+/* เพิ่มความสำคัญให้กับ .current-date */
+.days div.current-date {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+.display-selected {
+    margin-bottom: 10px;
+    padding: 20px 20px;
+    text-align: center;
+    font-size: 1.3rem;
+    color: var(--accent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    :root {
+        --container-width: 90%;
+        --day-size: 3rem;
+        --font-size-header: 1.2rem;
+        --font-size-day: 1rem;
+        --week-day-size: 1.2rem;
+        --nav-size: 1.5rem;
+    }
+
+    .today-button,
+    .add-button {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+}
+
+/* Additional styling for events list */
+.events-list {
+    margin-top: 20px;
+    max-height: 300px;
+    /* ปรับความสูงตามที่ต้องการ */
+    overflow-y: auto;
+    /* เปิดการเลื่อนแนวตั้งเมื่อเนื้อหามากเกินความสูงที่กำหนด */
+    padding-right: 10px;
+    /* เพิ่มระยะห่างทางขวาเพื่อไม่ให้ซ่อนเนื้อหาเล็กน้อย */
+}
+
+.events-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.events-list::-webkit-scrollbar-thumb {
+    background-color: var(--accent-2);
+    border-radius: 4px;
+}
+
+.events-list::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent);
+}
+
+.event-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    background-color: #fff;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.event-header h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--accent);
+}
+
+.event-time {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.event-body p {
+    margin: 5px 0;
+    color: #333;
+}
