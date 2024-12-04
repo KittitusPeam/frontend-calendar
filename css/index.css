@@ -164,6 +164,7 @@ pre {
     background-color: var(--disabled);
     color: #666666;
     cursor: not-allowed;
+    pointer-events: none;
 }
 
 .disabled:hover {
@@ -223,6 +224,11 @@ pre {
 
     .days div {
         font-size: var(--font-size-day);
+    }
+
+    .calendar-note {
+        font-size: 0.9rem;
+        padding: 8px;
     }
 }
 
@@ -288,4 +294,44 @@ pre {
 .event-body p {
     margin: 5px 0;
     color: #333;
+}
+
+.calendar-note {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: var(--disabled);
+    color: #666666;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+/* สไตล์สำหรับ Loading Spinner */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    /* สีพื้นหลังของ Spinner */
+    border-top: 8px solid var(--accent);
+    /* สีเส้นบนของ Spinner */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+/* กำหนดการเคลื่อนไหวของ Spinner */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }

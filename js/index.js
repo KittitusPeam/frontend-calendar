@@ -50,12 +50,12 @@ $(document).ready(function () {
                 .text(i)
                 .data("date", formattedDate);
 
-            // Disable dates 1-5
-            if (i >= 1 && i <= 5) {
+            // ปิดการใช้งานวันที่ 1-5 และวันเสาร์
+            if ((i >= 1 && i <= 5) || currentDate.getDay() === 6) { // วันเสาร์เป็นวันที่ 6
                 $dayDiv.addClass("disabled");
             }
 
-            // Highlight current date
+            // ไฮไลต์วันที่ปัจจุบัน
             const today = new Date();
             if (
                 currentDate.getFullYear() === today.getFullYear() &&
@@ -63,30 +63,42 @@ $(document).ready(function () {
                 currentDate.getDate() === today.getDate()
             ) {
                 $dayDiv.addClass("current-date");
-                // ถ้าวันที่ปัจจุบันเป็นวันที่ 1-5 จะยังคงไฮไลต์ แต่ไม่สามารถเลือกได้
+                // ถ้าวันที่ปัจจุบันเป็นวันที่ 1-5 หรือวันเสาร์ จะยังคงไฮไลต์ แต่ไม่สามารถเลือกได้
             }
 
             $days.append($dayDiv);
         }
 
-        // แสดงวันที่โดยอัตโนมัติ (วันนี้) ถ้าไม่ใช่วันที่ 1-5
+        // แสดงวันที่โดยอัตโนมัติ (วันนี้) ถ้าไม่ใช่วันที่ 1-5 หรือวันเสาร์
         const $todayDiv = $days.find(".current-date");
         if ($todayDiv.length && !$todayDiv.hasClass("disabled")) {
             const selectedDateText = $todayDiv.data("date");
             selectedDate = selectedDateText;
             fetchEventsByDate(selectedDate);
             $selected.text(`วันที่ : ${selectedDateText}`);
+            updateAddButtonVisibility(false); // วันที่เปิดใช้งาน
         } else if ($todayDiv.length && $todayDiv.hasClass("disabled")) {
-            // ถ้าวันที่วันนี้อยู่ในช่วง 1-5 ให้แสดงวันที่วันนี้แต่ไม่สามารถเลือกได้
+            // ถ้าวันที่วันนี้อยู่ในช่วง 1-5 หรือเป็นวันเสาร์ ให้แสดงวันที่วันนี้แต่ไม่สามารถเลือกได้
             const selectedDateText = $todayDiv.data("date");
             selectedDate = selectedDateText;
             fetchEventsByDate(selectedDate);
             $selected.text(`วันที่ : ${selectedDateText}`);
+            updateAddButtonVisibility(true); // วันที่ถูกปิดใช้งาน
         }
+
     }
+
 
     // Initial display
     displayCalendar();
+
+    function updateAddButtonVisibility(isDisabled) {
+        if (isDisabled) {
+            $addButton.hide();
+        } else {
+            $addButton.show();
+        }
+    }
 
     // Navigate to previous month
     $previous.on("click", function () {
@@ -129,8 +141,18 @@ $(document).ready(function () {
             $selected.text(`วันที่ : ${selectedDateText}`);
             $(".current-date").removeClass("current-date");
             $(this).addClass("current-date");
+            updateAddButtonVisibility(false); // วันที่เปิดใช้งาน
+        } else if ($(this).hasClass("disabled")) {
+            // ถ้าผู้ใช้คลิกวันที่ถูกปิดใช้งาน ให้แสดงวันที่นั้นแต่ซ่อนปุ่ม "+"
+            selectedDate = selectedDateText;
+            fetchEventsByDate(selectedDate);
+            $selected.text(`วันที่ : ${selectedDateText}`);
+            $(".current-date").removeClass("current-date");
+            $(this).addClass("current-date");
+            updateAddButtonVisibility(true); // วันที่ถูกปิดใช้งาน
         }
     });
+
 
     // เมื่อเปิดโมดัล ให้แสดงวันที่ที่ถูกเลือก
     $("#addEventModal").on("show.bs.modal", function (event) {
@@ -251,6 +273,10 @@ $(document).ready(function () {
         if (!date) return;
         var formData = new FormData();
         formData.append('eventDate', date);
+
+        // แสดง Loading Spinner
+        $(".spinner-container").show();
+
         $.ajax({
             url: `${BASE_URL}getCalendarByDate`,
             method: 'POST',
@@ -258,6 +284,10 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function (response) {
+
+                // ซ่อน Loading Spinner
+                $(".spinner-container").hide();
+
                 if (response.api_status === 1) {
                     displayEvents(response.data);
                 } else {
@@ -269,6 +299,10 @@ $(document).ready(function () {
                 }
             },
             error: function (xhr, status, error) {
+
+                // ซ่อน Loading Spinner
+                $(".spinner-container").hide();
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
