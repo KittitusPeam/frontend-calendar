@@ -306,32 +306,23 @@ pre {
     font-size: 1rem;
 }
 
-/* สไตล์สำหรับ Loading Spinner */
-.spinner-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-
-.spinner {
-    border: 8px solid #f3f3f3;
-    /* สีพื้นหลังของ Spinner */
-    border-top: 8px solid var(--accent);
-    /* สีเส้นบนของ Spinner */
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: transparent;
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    background: var(--accent);
 }
 
-/* กำหนดการเคลื่อนไหวของ Spinner */
-@keyframes spin {
+@keyframes rotation {
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
     }
-}
+} 

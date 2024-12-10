@@ -230,7 +230,7 @@ $(document).ready(function () {
                                     location.reload();
                                 }
                             });
-                        } else {
+                        } else if (response.api_status == 0) {
                             Swal.fire({
                                 title: "Error",
                                 text: response.api_message,
@@ -271,11 +271,12 @@ $(document).ready(function () {
     // ฟังก์ชันสำหรับดึงข้อมูลกิจกรรมตามวันที่ที่เลือก
     function fetchEventsByDate(date) {
         if (!date) return;
+
+        // แสดง loader
+        $eventsList.html('<span class="loader"></span>');
+
         var formData = new FormData();
         formData.append('eventDate', date);
-
-        // แสดง Loading Spinner
-        $(".spinner-container").show();
 
         $.ajax({
             url: `${BASE_URL}getCalendarByDate`,
@@ -285,8 +286,8 @@ $(document).ready(function () {
             processData: false,
             success: function (response) {
 
-                // ซ่อน Loading Spinner
-                $(".spinner-container").hide();
+                // ซ่อน loader เมื่อโหลดข้อมูลเสร็จ
+                $eventsList.find('.loader').remove();
 
                 if (response.api_status === 1) {
                     displayEvents(response.data);
@@ -300,8 +301,8 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
 
-                // ซ่อน Loading Spinner
-                $(".spinner-container").hide();
+                // ซ่อน loader และแสดงข้อความข้อผิดพลาด
+                $eventsList.find('.loader').remove();
 
                 Swal.fire({
                     icon: 'error',
