@@ -15,6 +15,18 @@ $(document).ready(function () {
     let month = date.getMonth();
     let selectedDate = null;
 
+    $("#time").on("input", function () {
+        var selectedTime = $(this).val();
+        if (selectedTime < "07:00" || selectedTime > "16:00") {
+            Swal.fire({
+                icon: "error",
+                title: "เวลาไม่ถูกต้อง",
+                text: "กรุณาเลือกเวลาในช่วง 07:00 ถึง 16:00 เท่านั้น",
+            });
+            $(this).val(""); // ล้างเวลา
+        }
+    });
+
     function displayCalendar() {
         $days.empty();
         $selected.empty();
@@ -46,12 +58,11 @@ $(document).ready(function () {
                 month: "long",
                 year: "numeric",
             });
-            const $dayDiv = $("<div></div>")
-                .text(i)
-                .data("date", formattedDate);
+            const $dayDiv = $("<div></div>").text(i).data("date", formattedDate);
 
             // ปิดการใช้งานวันที่ 1-5 และวันเสาร์
-            if ((i >= 1 && i <= 5) || currentDate.getDay() === 6) { // วันเสาร์เป็นวันที่ 6
+            if ((i >= 1 && i <= 5) || currentDate.getDay() === 6) {
+                // วันเสาร์เป็นวันที่ 6
                 $dayDiv.addClass("disabled");
             }
 
@@ -85,9 +96,7 @@ $(document).ready(function () {
             $selected.text(`วันที่ : ${selectedDateText}`);
             updateAddButtonVisibility(true); // วันที่ถูกปิดใช้งาน
         }
-
     }
-
 
     // Initial display
     displayCalendar();
@@ -153,7 +162,6 @@ $(document).ready(function () {
         }
     });
 
-
     // เมื่อเปิดโมดัล ให้แสดงวันที่ที่ถูกเลือก
     $("#addEventModal").on("show.bs.modal", function (event) {
         if (selectedDate) {
@@ -186,10 +194,10 @@ $(document).ready(function () {
         }
 
         var formData = new FormData();
-        formData.append('fullname', fullname);
-        formData.append('phone', phone);
-        formData.append('time', time);
-        formData.append('eventDate', eventDate);
+        formData.append("fullname", fullname);
+        formData.append("phone", phone);
+        formData.append("time", time);
+        formData.append("eventDate", eventDate);
 
         Swal.fire({
             title: "ยืนยัน",
@@ -208,11 +216,11 @@ $(document).ready(function () {
                     showConfirmButton: false,
                     willOpen: () => {
                         Swal.showLoading();
-                    }
+                    },
                 });
                 $.ajax({
                     url: `${BASE_URL}submitCalendarConfirmation`, // ใช้ BASE_URL สำหรับ API
-                    method: 'POST',
+                    method: "POST",
                     data: formData,
                     contentType: false,
                     processData: false,
@@ -234,7 +242,7 @@ $(document).ready(function () {
                             Swal.fire({
                                 title: "Error",
                                 text: response.api_message,
-                                icon: "error"
+                                icon: "error",
                             });
                         }
                     },
@@ -247,7 +255,7 @@ $(document).ready(function () {
                             showCancelButton: false,
                             confirmButtonText: "OK",
                         });
-                    }
+                    },
                 });
             }
         });
@@ -276,59 +284,59 @@ $(document).ready(function () {
         $eventsList.html('<span class="loader"></span>');
 
         var formData = new FormData();
-        formData.append('eventDate', date);
+        formData.append("eventDate", date);
 
         $.ajax({
             url: `${BASE_URL}getCalendarByDate`,
-            method: 'POST',
+            method: "POST",
             data: formData,
             contentType: false,
             processData: false,
             success: function (response) {
-
                 // ซ่อน loader เมื่อโหลดข้อมูลเสร็จ
-                $eventsList.find('.loader').remove();
+                $eventsList.find(".loader").remove();
 
                 if (response.api_status === 1) {
                     displayEvents(response.data);
                 } else {
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
+                        icon: "error",
+                        title: "Error",
                         text: response.api_message,
                     });
                 }
             },
             error: function (xhr, status, error) {
-
                 // ซ่อน loader และแสดงข้อความข้อผิดพลาด
-                $eventsList.find('.loader').remove();
+                $eventsList.find(".loader").remove();
 
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'เกิดข้อผิดพลาดในการดึงข้อมูลกิจกรรม',
+                    icon: "error",
+                    title: "Error",
+                    text: "เกิดข้อผิดพลาดในการดึงข้อมูลกิจกรรม",
                 });
-            }
+            },
         });
     }
 
     // ฟังก์ชันสำหรับแสดงข้อมูลกิจกรรม
     function displayEvents(events) {
-        let html = '';
+        let html = "";
         if (events.length > 0) {
-            events.forEach(event => {
+            events.forEach((event) => {
                 html += `
                 <div class="event-card">
                     <div class="event-header">
                         <h5>${event.fullname}</h5>
-                        <span class="event-time">${formatTime(event.time)}</span>
+                        <span class="event-time">${formatTime(
+                    event.time
+                )}</span>
                     </div>
                 </div>
             `;
             });
         } else {
-            html = '<p>ไม่มีข้อมูลกิจกรรมในวันนี้</p>';
+            html = "<p>ไม่มีข้อมูลกิจกรรมในวันนี้</p>";
         }
         $eventsList.html(html);
     }
