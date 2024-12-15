@@ -33,4 +33,21 @@ $(document).ready(function () {
             confirmButtonText: 'OK'
         });
     });
+
+    // New button to copy SELECT query
+    $('#copySelectBtn').on('click', function() {
+        const selectQuery = "SELECT f_MbCode, f_Custinfo, f_IsUse\nFROM [POS_JayUbon01].[dbo].[MbMaster];";
+        const tempTextArea = $('<textarea>').val(selectQuery).appendTo('body');
+        tempTextArea.select();
+        document.execCommand('copy');
+        tempTextArea.remove();
+
+        // Show SweetAlert2 confirmation
+        Swal.fire({
+            icon: 'success',
+            title: 'Copied!',
+            text: 'SELECT query has been copied to the clipboard.',
+            confirmButtonText: 'OK'
+        });
+    });
 });
