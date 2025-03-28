@@ -36,11 +36,18 @@ $(document).ready(function () {
         const lastDay = new Date(year, month + 1, 0);
         const firstDayIndex = firstDay.getDay();
         const numberOfDays = lastDay.getDate();
-
+        
         const formattedDate = date.toLocaleString("th-TH", {
             month: "long",
             year: "numeric",
         });
+
+        // รายการวันที่ที่ต้องปิดการใช้งาน
+        const disabledDates = ["14 เมษายน 2568", 
+            "15 เมษายน 2568", 
+            "16 เมษายน 2568", 
+            "19 เมษายน 2568"
+        ];
 
         $display.text(formattedDate);
 
@@ -58,16 +65,18 @@ $(document).ready(function () {
                 month: "long",
                 year: "numeric",
             });
+            
             const $dayDiv = $("<div></div>").text(i).data("date", formattedDate);
 
-            // ปิดการใช้งานวันที่ 1-5 และวันเสาร์
-            if ((i >= 1 && i <= 5) || currentDate.getDay() === 6) {
-                // วันเสาร์เป็นวันที่ 6
+
+            // ปิดการใช้งานวันที่ 1-5, วันเสาร์ และวันที่ที่กำหนด
+            if ((i >= 1 && i <= 5) || currentDate.getDay() === 6 || disabledDates.includes(formattedDate)) {
                 $dayDiv.addClass("disabled");
             }
 
             // ไฮไลต์วันที่ปัจจุบัน
             const today = new Date();
+            
             if (
                 currentDate.getFullYear() === today.getFullYear() &&
                 currentDate.getMonth() === today.getMonth() &&
@@ -82,8 +91,11 @@ $(document).ready(function () {
 
         // แสดงวันที่โดยอัตโนมัติ (วันนี้) ถ้าไม่ใช่วันที่ 1-5 หรือวันเสาร์
         const $todayDiv = $days.find(".current-date");
+        
         if ($todayDiv.length && !$todayDiv.hasClass("disabled")) {
+            
             const selectedDateText = $todayDiv.data("date");
+            
             selectedDate = selectedDateText;
             fetchEventsByDate(selectedDate);
             $selected.text(`วันที่ : ${selectedDateText}`);
